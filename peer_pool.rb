@@ -1,4 +1,4 @@
-class Pool < ThreadSafe::Array
+class PeerPool < ThreadSafe::Array
   def update(items)
     return unless items
     items = [items] unless items.is_a?(Array)
@@ -11,6 +11,8 @@ class Pool < ThreadSafe::Array
     items = [items] unless items.is_a?(Array)
     items.each { |i| delete(i) }
   end
+
+  # interface
 
   def to_json
     to_a.to_json

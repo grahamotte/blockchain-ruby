@@ -1,5 +1,4 @@
 class TxnPool < ThreadSafe::Array
-
   def add_many_serialized(txns)
     (txns || []).each { |st| add_serialized(**st.map { |k, v| [k.to_sym, v] }.to_h) }
   end
@@ -35,7 +34,7 @@ class TxnPool < ThreadSafe::Array
       .each { |t| remove_txn(t) }
   end
 
-# helpers
+  # interface
 
   def to_json
     serialize.to_json

@@ -27,7 +27,7 @@ class Txn
     message == OpenSSL::PKey::RSA.new(from).public_decrypt(Base64.decode64(signature))
   end
 
-  # helpers
+  # interface
 
   def to_json
     serialize.to_json
@@ -48,7 +48,8 @@ class Txn
   end
 
   def name(id)
-    id.split("\n")[1].last(8) rescue id
+    return id if id == 'origin'
+    id.split("\n")[1][-8..-1].downcase rescue id
   end
 
   def to_s

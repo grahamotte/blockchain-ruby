@@ -1,14 +1,13 @@
+require 'sinatra'
+require 'sinatra/strong-params'
+require 'active_support'
+require 'active_support/core_ext'
 require 'json'
 require 'rest-client'
 require 'set'
 require 'pp'
 require 'tty-table'
-
-require 'sinatra'
-require 'sinatra/strong-params'
-require 'active_support'
-require 'active_support/core_ext'
-require_relative 'pool'
+require_relative 'peer_pool'
 require_relative 'txn_pool'
 require_relative 'txn'
 require_relative 'block'
@@ -22,7 +21,7 @@ hash_argv = ARGV
   .map { |k, v| [k.gsub('-', '').to_sym, v] }
   .to_h
 
-$peer_pool = Pool.new(hash_argv[:peers]&.split(',') || [])
+$peer_pool = PeerPool.new(hash_argv[:peers]&.split(',') || [])
 $txn_pool = TxnPool.new
 $blockchain = Blockchain.new
 $address = "http://localhost:#{hash_argv[:port]}"
@@ -132,8 +131,5 @@ end
 get '/blockchain', allows: [:blockchain] do
   content_type :json
 
-end
 
-post '/solution' do
-  content_type :json
 end

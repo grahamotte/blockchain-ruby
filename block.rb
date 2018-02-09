@@ -7,6 +7,14 @@ class Block
     @nonce = nonce
   end
 
+  def self.new_from_serialized(serialized)
+    Block.new(
+      previous_block_hash: serialized[:previous_block_hash],
+      txns: serialized[:txns].map { |tj| Txn.new(**tj) },
+      nonce: serialized[:nonce]
+    )
+  end
+
   def block_hash
     Digest::SHA256.hexdigest(to_json)
   end
@@ -28,7 +36,7 @@ class Block
     @nonce
   end
 
-  # helpers
+  # interface
 
   def to_json
     serialize.to_json
@@ -53,11 +61,11 @@ class Block
   def to_s
     TTY::Table.new(
       rows: {
-        previous_block_hash: previous_block_hash,
         block_hash: block_hash,
         nonce: nonce,
         valid: valid?,
-        txns: txns.map(&:to_s).join("\n")
+        txns: txns.map(&:to_s).join("\n"),
+        previous_block_hash: previous_block_hash,
       }.to_a
     ).render(:unicode, multiline: true, padding: [0, 1, 0, 1])
   end
